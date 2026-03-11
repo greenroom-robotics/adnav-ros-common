@@ -606,13 +606,23 @@ an_packet_t* encode_external_velocity_packet(external_velocity_packet_t* externa
 
 int decode_external_body_velocity_packet(external_body_velocity_packet_t* external_body_velocity_packet, an_packet_t* an_packet)
 {
-	if(an_packet->id == packet_id_external_body_velocity && an_packet->length == 16)
-	 {
-		memcpy(&external_body_velocity_packet->velocity, &an_packet->data[0], 3 * sizeof(float));
-		memcpy(&external_body_velocity_packet->standard_deviation, &an_packet->data[12], sizeof(float));
-		return 0;
+	if(an_packet->id == packet_id_external_body_velocity)
+	{
+		if (an_packet->length == 12)
+		{
+			memcpy(&external_body_velocity_packet->velocity, &an_packet->data[0], 3 * sizeof(float));
+			return 0;
+		}
+		if (an_packet->length == 24)
+		{
+			memcpy(&external_body_velocity_packet->velocity, &an_packet->data[0], 3 * sizeof(float));
+			memcpy(&external_body_velocity_packet->standard_deviation, &an_packet->data[12], sizeof(float));
+			return 0;
+		}
+		return 1;
 	}
-	else return 1;
+
+	return 1;
 }
 
 an_packet_t* encode_external_body_velocity_packet(external_body_velocity_packet_t* external_body_velocity_packet)
