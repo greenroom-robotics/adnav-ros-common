@@ -110,6 +110,11 @@ class Logger : public std::ofstream{
         */
         void writeAndIncrement(const char* s, std::streamsize n) {
             // Check if the stream has failed.
+
+            if (n <= 0) {
+                return;
+            }
+
             if( (this->rdstate() & std::ofstream::failbit) != 0) {
                 return;
             }
